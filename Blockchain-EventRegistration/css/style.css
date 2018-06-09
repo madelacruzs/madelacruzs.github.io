@@ -92,14 +92,14 @@ input[type="submit"],a,.agileinfo_social_icons li{
     color: #fff;
     font-size: 3em;
     margin-bottom: 1em;
-	text-transform: uppercase;
+	/* text-transform: uppercase; */
 	letter-spacing:2px;
 }
 .main h3{
 	text-align: center;
     color: #fff;
     margin-bottom: 1em;
-	text-transform: uppercase;
+	/* text-transform: uppercase; */
 	letter-spacing:2px;
 }
 
@@ -191,6 +191,17 @@ input[type="submit"],a,.agileinfo_social_icons li{
 	color:#FF0F75;
 }
 .w3_main_grid_right input[type="submit"]{
+	outline:none;
+	padding:10px 0;
+	width:22%;
+	text-transform:uppercase;
+	font-size:14px;
+	color:#fff;
+	background:#cd31c1;
+	border:none;
+	cursor:pointer;
+}
+.w3_main_grid_right input[type="button"]{
 	outline:none;
 	padding:10px 0;
 	width:22%;

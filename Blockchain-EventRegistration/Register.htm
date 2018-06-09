@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>BlockchainEvent Registration | Example Registration With Smart Contract </title>
+<title> Example Registration With Blockchain and Smart Contract </title>
 <!-- for-mobile-apps -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -21,6 +21,8 @@
 <!-- font-awesome-icons -->
 <!-- //font-awesome-icons -->
 
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+
 </head>
 <body>
 
@@ -29,8 +31,8 @@
 <!-- banner -->
 	<div class="center-container">
 		<div class="main">
-			<h1 class="w3layouts_head">Blockchain Event Registration</h1>
-			<h3>Example Registration With Smart Contract. Pay with Ether</h4>
+			<h1 class="w3layouts_head">Blockchain Course Event </h1>
+			<h3>Registration Example with Blockchain and Smart Contract. Pay with Ether</h4>
 			<!---728x90-->
 
 <div style='margin: 0 auto;text-align: center;margin-top: 5px;'>
@@ -42,25 +44,25 @@
 						<div class="w3_agileits_main_grid w3l_main_grid">
 							<span class="agileits_grid">
 								<label>Your Name </label>
-								<input type="text" name="Task" placeholder="Your Name" required="">
+								<input id="txtName" type="text" name="Task" placeholder="Your Name" required="">
 							</span>
 						</div>
 						<div class="w3_agileits_main_grid w3l_main_grid">
 							<span class="agileits_grid">
 								<label>Your Email </label>
-								<input type="text" name="Task" placeholder="Your Email" required="">
+								<input id="txtEmail" type="text" name="Task" placeholder="Your Email" required="">
 							</span>
 						</div>
 						<div class="w3_agileits_main_grid w3l_main_grid">
 							<span class="agileits_grid">
 								<label>Phone Number </label>
-								<input type="text" name="Task" placeholder="Phone Number" required="">
+								<input id="txtPhone" type="text" name="Task" placeholder="Phone Number" required="">
 								</span>
 						</div>
 						<div class="w3_agileits_main_grid w3l_main_grid">
 							<span class="agileits_grid">
 								<label>Current Price</label>
-								<input type="text" name="Task" placeholder="" required="" disabled="disabled">
+								<input id="txtCurrentPrice" type="text" name="Task" placeholder="" required="" disabled="disabled">
 							</span>
 						</div>
 						
@@ -68,25 +70,25 @@
 					
 						<div class="clear"></div>
 						<span>First Ticket: 0.05 ether </span>
+						<span id="txtAvailable"></span>
+
+						<div class="w3_agileits_main_grid w3l_main_grid">
+							<span class="agileits_grid">
+								<img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif" style="height:45px">
+
+								</span>
+						</div>
 
 						<div class="w3_main_grid">
 							<div class="w3_main_grid_right">
-								<input type="submit" value="Submit">
+								<input id="btnBuy" type="button" value="Buy Ticket">
 							</div>
 						</div>
 					</div>
 					
 				</form>
 			</div>
-		<!-- Calendar -->
-			<link rel="stylesheet" href="css/jquery-ui.css" />
-				<script src="js/jquery-ui.js"></script>
-					<script>
-						$(function() {
-							$( "#datepicker" ).datepicker();
-						});
-					</script>
-		<!-- //Calendar -->
+
 		<!---728x90-->
 </div>
 			<div class="w3layouts_copy_right">
@@ -99,5 +101,104 @@
 		</div>
 	</div>
 <!-- //footer -->
+
+<script type="text/javascript">
+
+var MACSContract = null;
+
+window.addEventListener('load', function() {
+
+	// if (typeof web3 !== 'undefined') {
+	// 	web3 = new Web3(Web3.currentProvider);
+	// } else {
+	// 	web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	// }
+	
+	$("#loader").hide();
+
+	loadMyDAPP();
+
+	loadCurrentPrice();
+
+	loadAvailable();
+});
+
+function loadMyDAPP(){
+	web3.eth.defaultAccount =  web3.eth.accounts[0];
+
+	var myContract = web3.eth.contract([{"constant":false,"inputs":[{"name":"_name","type":"bytes16"},{"name":"_email","type":"bytes16"},{"name":"_phoneNumber","type":"bytes16"}],"name":"register","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"eventName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ticketsSold","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"hasPurchased","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"currentPrice","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"baseOneEther","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"listAllAttendants","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"attendants","outputs":[{"name":"name","type":"bytes16"},{"name":"email","type":"bytes16"},{"name":"phoneNumber","type":"bytes16"},{"name":"purchased","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_eventName","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"name","type":"bytes16"},{"indexed":false,"name":"priceTicket","type":"uint256"}],"name":"resultRegister","type":"event"}]);
+
+	MACSContract = myContract.at('0xf1d9a0d40008f99a902208c8fd0fc6c6eaf6a073');
+
+ 	var watchEvent = MACSContract.resultRegister({}, {fromBlock: 'latest', toBlock: 'latest'} );
+	watchEvent.watch((error, result) => {
+		$("#loader").hide();
+		if (result) {
+			console.log(result);
+			loadCurrentPrice();
+			clearFields();
+			//alert("Se ha registrado al evento con un precio de: " + web3.fromWei(result.args.priceTicket));
+			loadAvailable();
+		} else {
+			console.log(error);
+		}
+	});
+
+	$("#btnBuy").click(function() {
+		MACSContract.hasPurchased((err, res) => {
+			//Si no ha comprado
+			if(!res){
+				$("#loader").show();
+				var priceTicket = web3.toWei($("#txtCurrentPrice").val());
+
+				MACSContract.register($("#txtName").val(), $("#txtEmail").val(), $("#txtPhone").val(),
+				{
+					from: web3.eth.defaultAccount,
+					gasLimit:3000000,
+					gas:3000000,
+					value: priceTicket
+				},
+				function (error, result){ //get callback from function which is your transaction key
+						if(!error){
+							console.log(result);
+							alert("Se ha registrado al evento con un precio de: " + $("#txtCurrentPrice").val() + " Ether");
+						} else{
+							console.log(error);
+						}
+				});
+			}else{
+				alert("Usted ya ha comprado la entrada.");
+			}
+		});		
+	});
+		
+}
+
+function loadCurrentPrice()
+{
+	MACSContract.baseOneEther((err, res) => {
+		var oneEther = res.c;
+		MACSContract.currentPrice((err, res) => {
+			var currentPrice = res.c/oneEther;
+			$("#txtCurrentPrice").val(currentPrice );
+		});
+	});
+}
+
+function loadAvailable()
+{
+	MACSContract.ticketsSold((err, res) => {
+		console.log(res);
+		$("#txtAvailable").html(res.c +" tickets sold out of 100" );
+	});
+}
+
+
+function clearFields(){
+	$("#txtName").val("");
+	$("#txtEmail").val("");
+	$("#txtPhone").val("");
+}
+</script>
 </body>
 </html>

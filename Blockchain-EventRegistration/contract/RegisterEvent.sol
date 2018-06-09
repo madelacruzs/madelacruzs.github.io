@@ -3,11 +3,14 @@ pragma solidity ^0.4.23;
 contract SmartContractRegisterEvent {
 
     struct People {
-        string name;
-        string email;
-        string phoneNumber,
+        bytes16 name;
+        bytes16 email;
+        bytes16 phoneNumber;
         bool purchased;
     }
+
+    //Precio Base
+    uint256 public baseOneEther = 1 ether;
 
     //Precio Base
     uint256 basePrice = 0.05 ether;
@@ -34,24 +37,35 @@ contract SmartContractRegisterEvent {
     mapping(address => People) public attendants;   
     address[] allAttendants;
 
+    //Evento para mostrar resultado de compra
+    event resultRegister(
+       bytes16 name,
+       uint256 priceTicket
+    );
+
     constructor (string _eventName) public {
         owner = msg.sender;
         eventName = _eventName;
     }
 	
     //Registro
-    function register(string _name, string _email) payable public {
-
-        require (msg.value == currentPrice() && attendants[msg.sender].purchased == false && ticketsSold <= ticketLimit,"Error de registro");
-
-        addAttendantAndTransfer(_name,_email);
+    function register(bytes16 _name, bytes16 _email, bytes16 _phoneNumber) payable public {
+        //validar que no se hayan acabado los tickets
+        require(ticketsSold <= ticketLimit,"Boletos agotados");
+        // que el precio actual sea igual al valor enviado o si ya compro.
+        require(msg.value == currentPrice() && attendants[msg.sender].purchased == false, "Ya haz comprado la entrada o saldo insuficiente");
+        //Agregar registro
+        addAttendantAndTransfer(_name, _email, _phoneNumber);
+        //Notificar evento
+        emit resultRegister(_name, msg.value);
     }
 
     //Agregar la persona al registro
-    function addAttendantAndTransfer(string _name, string _email) internal {
+    function addAttendantAndTransfer(bytes16 _name, bytes16 _email, bytes16 _phoneNumber) internal {
         attendants[msg.sender] = People({
             name: _name,
             email: _email,
+            phoneNumber: _phoneNumber,
             purchased: true
         });
         
