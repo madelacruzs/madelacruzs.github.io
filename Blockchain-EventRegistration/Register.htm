@@ -145,31 +145,32 @@ function loadMyDAPP(){
 	});
 
 	$("#btnBuy").click(function() {
+		if($.trim($("#txtName").val()) == "" && $.trim($("#txtEmail").val()) == ""){ 
+			alert("Capture su nombre o email.");
+			return;
+		}
 		MACSContract.hasPurchased((err, res) => {
 			//Si no ha comprado
 			if(!res){
-				if($.trim($("#txtName").val()) == "" && $.trim($("#txtEmail").val()) == ""){ 
-					$("#loader").show();
-					var priceTicket = web3.toWei($("#txtCurrentPrice").val());
+				$("#loader").show();
+				var priceTicket = web3.toWei($("#txtCurrentPrice").val());
 
-					MACSContract.register($("#txtName").val(), $("#txtEmail").val(), $("#txtPhone").val(),
-					{
-						from: web3.eth.defaultAccount,
-						gasLimit:3000000,
-						gas:3000000,
-						value: priceTicket
-					},
-					function (error, result){ //get callback from function which is your transaction key
-							if(!error){
-								console.log(result);
-								alert("Se ha registrado al evento con un precio de: " + $("#txtCurrentPrice").val() + " Ether");
-							} else{
-								console.log(error);
-							}
-					});
-				}else{
-					alert("Capture su nombre o email.");
-				}
+				MACSContract.register($("#txtName").val(), $("#txtEmail").val(), $("#txtPhone").val(),
+				{
+					from: web3.eth.defaultAccount,
+					gasLimit:3000000,
+					gas:3000000,
+					value: priceTicket
+				},
+				function (error, result){ //get callback from function which is your transaction key
+						if(!error){
+							console.log(result);
+							alert("Se ha registrado al evento con un precio de: " + $("#txtCurrentPrice").val() + " Ether");
+						} else{
+							console.log(error);
+						}
+				});			
+				
 			}else{
 				alert("Usted ya ha comprado la entrada.");
 			}
