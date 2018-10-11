@@ -1,0 +1,166 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Blockchain Projects | Miguel De La Cruz </title>
+<!-- for-mobile-apps -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="The Blockchain" />
+
+<link rel='shortcut icon' type='image/x-icon' href='https://raw.githubusercontent.com/ethereum/ethereum-org/master/public/images/favicon.ico' />
+
+<!-- //for-mobile-apps -->
+<!-- //custom-theme -->
+<link href="../Blockchain-EventRegistration/css/style.css" rel="stylesheet" type="text/css" media="all" />
+
+<!-- js -->
+<script type="text/javascript" src="../Blockchain-EventRegistration/js/jquery-2.1.4.min.js"></script>
+<!-- //js -->
+<!-- font-awesome-icons -->
+<!-- //font-awesome-icons -->
+
+<script type="text/javascript">
+	window.addEventListener('load', function() {
+
+		$("#loader").hide();
+
+	});
+
+	function readURL(input) {
+		$("#loader").show();
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				var baseFile64 = e.target.result.split(',')[1];
+				var fileName = input.files[0].name;
+				uploadToIPFS(baseFile64, fileName, function(result){
+					$("#loader").hide();
+					$("#base").val(result[0].url);
+				});
+			};
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+	function uploadToIPFS(_base64File, _fileName, success){
+		var data = {
+			file64: _base64File,
+			fileName: _fileName
+        }
+        $.ajax({
+            url: 'http://54.201.253.121:3001/api/ipfs/',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+				success(result);
+            },
+            data: JSON.stringify(data),
+			error: function( jqXhr, textStatus, errorThrown){
+				$("#loader").hide();
+				console.log(errorThrown);
+			}
+        });
+	}
+
+</script>
+
+</head>
+
+<style type="text/css">
+    #background {
+        position: fixed;
+        width: 100%;
+        min-height: 100%;
+        background-color: #57b8ff;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-image: url(img/background.76321afe.svg)!important;
+    }
+    #root {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+	}
+	span{
+		color: #FFFFFF;
+	}
+	.w3layouts_main_grid {
+		width: 60%;
+	}
+	.w3layouts_main_grid textarea {
+		width: 95%
+	}
+</style>
+
+
+
+<body>
+        <div id="background"></div>
+
+        <div id="root">
+<!-- banner -->
+	<div class="center-container">
+		<div class="main">
+			<h1 class="w3layouts_head">IPFS - Upload File </h1>
+			<!---728x90-->
+
+			<div style='margin: 0 auto;text-align: center;margin-top: 5px;'>
+				
+
+			</div>
+				<div class="w3layouts_main_grid">
+						
+					<form action="#" method="post" class="w3_form_post">
+						<div class="w3_agileits_main_grid w3l_main_grid">
+							<span class="agileits_grid">
+								<img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif" style="height:45px">
+
+								</span>
+						</div>
+						<div class="w3_agileits_main_grid w3l_main_grid">
+								<span class="agileits_grid">
+										Elige la imagen que deseas cargar a IPFS. Úsalo con responsabilidad :)
+									</span>
+							<span class="agileits_grid">
+								
+							</span>
+							<!-- <h1>Sube tu imagen</h1> -->
+							<input id="fileinput" type="file" accept="image/gif, image/jpeg, image/png" onchange="readURL(this);" /> <br><br>
+							<textarea id="base" readonly="readonly"></textarea>
+						</div>
+						
+						
+					
+					
+						<div class="clear"></div>
+					
+						
+				<br />
+				<br />
+				<br />
+				<br />
+					<small>Si quieres saber mas hacerca del código implementado en back-end, puedes revisar el proyecto en nodejs en <a href="https://github.com/madelacruzs/IPFS-Nodejs">IPFS-Nodejs</a></s></small>
+
+				</form>
+			</div>
+	
+		<!---728x90-->
+		</div>
+
+			<div class="w3layouts_copy_right">
+				<div class="container">
+					<p>2017 Blockchain | Powered by <a href="https://github.com/madelacruzs">madelacruzs</a></p>
+				</div>
+			</div>
+			<!--728x90-->
+		</div>
+	</div>
+</div>
+<!-- //footer -->
+
+</div>
+</body>
+</html>
