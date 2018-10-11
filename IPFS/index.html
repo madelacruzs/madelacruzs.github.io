@@ -16,6 +16,8 @@
 
 <!-- js -->
 <script type="text/javascript" src="../Blockchain-EventRegistration/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="js/jquery.ajax-cross-origin.min.js"></script>
+
 <!-- //js -->
 <!-- font-awesome-icons -->
 <!-- //font-awesome-icons -->
@@ -50,7 +52,8 @@
 			fileName: _fileName
         }
         $.ajax({
-            url: 'http://54.201.253.121:3001/api/ipfs/',
+			url: 'http://54.201.253.121:3001/api/ipfs/',
+			crossDomain: true,
             type: 'post',
             dataType: 'json',
             contentType: 'application/json',
